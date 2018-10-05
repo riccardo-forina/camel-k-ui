@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { 
+import {
   Redirect,
-  Route, 
+  Route,
 } from 'react-router-dom';
-import { 
-  AuthContext, 
+import {
+  AuthContext,
 } from '.';
 
 export class AuthenticatedRoute extends React.Component<any> {
@@ -16,7 +16,7 @@ export class AuthenticatedRoute extends React.Component<any> {
     this.Component = () => (
       <AuthContext.Consumer>
         {({ logged }) => (
-          logged 
+          logged
             ? <Component {...componentProps} />
             : <Redirect to={'/login'} />
         )}

@@ -1,4 +1,10 @@
+import {
+  Col,
+  ListView,
+  Row
+} from 'patternfly-react';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { IRestState } from '../../rest';
 import { KubernetesRest } from '../KubernetesRest';
 
@@ -73,23 +79,45 @@ interface ICustomResponseDefinitionResponse extends IRestState {
 export class CustomResourceDefinitionList extends React.Component<ICustomResourceDefinitionList> {
   public render() {
     return (
-      <div className={'row row-cards-pf'}>
-        <KubernetesRest
-          url={'/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions'}
-          method={'GET'}
-        >
-          {({ loading, error, data }: ICustomResponseDefinitionResponse) => (
-            <React.Fragment>
-              <p>
-                { loading ? 'Loading' : 'Loaded'}
-              </p>
-              <pre>
-                {JSON.stringify(data)}
-              </pre>
-            </React.Fragment>
-          )}
-        </KubernetesRest>
-      </div>
+      <React.Fragment>
+        <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
+          <li className=""><Link to="/">Home</Link></li>
+          <li className=""><Link to="/kubernetes">Kubernetes</Link></li>
+          <li className="active"><span>Custom Resource Definitions</span></li>
+        </ol>
+        <div className={'row row-cards-pf'}>
+          <KubernetesRest
+            url={'/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions'}
+            method={'GET'}
+          >
+            {({ loading, error, data }: ICustomResponseDefinitionResponse) =>
+              loading
+                ? <div className="spinner" />
+                : (
+                  <React.Fragment>
+                    <ListView>
+                      { data.items.map((item, index) => (
+                        <ListView.Item
+                          key={index}
+                          leftContent={<ListView.Icon name="gear" />}
+                          stacked={true}
+                          heading={item.metadata.name}
+                          description={`UID: ${item.metadata.uid}`}
+                        >
+                          <Row>
+                            <Col sm={11}>
+                              <pre>{JSON.stringify(item.spec, null, 2)}</pre>
+                            </Col>
+                          </Row>
+                        </ListView.Item>
+                      ))}
+                    </ListView>
+                  </React.Fragment>
+                )
+            }
+          </KubernetesRest>
+        </div>
+      </React.Fragment>
     );
   }
 }

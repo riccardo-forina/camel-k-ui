@@ -21,7 +21,7 @@ class LayoutBase extends React.Component<RouteComponentProps> {
           transform: 'translateZ(0px)',
         }}>
           <div className="layout-pf layout-pf-fixed">
-            <VerticalNav>
+            <VerticalNav sessionKey={'mainMenu'}>
               <VerticalNav.Masthead
                 iconImg={pitto}
                 titleImg={typo}
@@ -32,17 +32,11 @@ class LayoutBase extends React.Component<RouteComponentProps> {
               />
               <VerticalNav.Item
                 title={'Kubernetes'}
-                iconClass="fa fa-home"
-                active={true}
-              >
-                <VerticalNav.SecondaryItem
-                  title={'Custom Resource Definition'}
-                  iconClass="fa fa-home"
-                  onClick={this.goToCrd}
-                />
-              </VerticalNav.Item>
+                iconClass="fa fa-server"
+                onClick={this.goToKubernetes}
+              />
             </VerticalNav>
-            <main className={"container-fluid container-cards-pf container-pf-nav-pf-vertical nav-pf-persistent-secondary nav-pf-vertical-with-badges"}>
+            <main className={"container-fluid container-cards-pf container-pf-nav-pf-vertical nav-pf-persistent-secondary "}>
               {this.props.children}
             </main>
           </div>
@@ -55,8 +49,8 @@ class LayoutBase extends React.Component<RouteComponentProps> {
     this.props.history.replace('/');
   };
 
-  protected goToCrd = () => {
-    this.props.history.replace('/crd');
+  protected goToKubernetes = () => {
+    this.props.history.replace('/kubernetes');
   };
 
 }

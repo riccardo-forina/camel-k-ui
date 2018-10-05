@@ -12,18 +12,16 @@ import {
   Login,
   Token,
 } from './auth';
-import {
-  Layout
-} from './layout';
+import { Kubernetes } from './kubernetes';
+import { Layout } from './layout';
 
 import './App.css';
-import { CustomResourceDefinitionList } from "./kubernetes/crd";
 
 const LayoutWithRoutes = () => (
   <Layout>
     <Switch>
-      <Redirect exact={true} path='/' to={'/crd'} />
-      <Route path='/crd' component={CustomResourceDefinitionList} />
+      <Redirect exact={true} path='/' to={'/kubernetes'} />
+      <Route path='/kubernetes' component={Kubernetes} />
     </Switch>
   </Layout>
 );
