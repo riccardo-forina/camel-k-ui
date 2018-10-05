@@ -24,15 +24,12 @@ export class KubernetesDirectory extends React.Component<RouteComponentProps> {
               <CardGrid.Col xs={6} sm={3} md={3}>
                 <Card accented={true} aggregated={true}>
                   <CardTitle>
-                    <Link to={`${this.props.match.url}/crd`}>
+                    <Link to={`${this.props.match.url}/custom-resources`}>
                       Custom Resources
                     </Link>
                   </CardTitle>
                   <CardBody>
-                    A custom resource is an extension of the Kubernetes API that
-                    is not necessarily available on every Kubernetes cluster.
-                    In other words, it represents a customization of a particular
-                    Kubernetes installation.
+                    Show all Custom Resources
                   </CardBody>
                 </Card>
               </CardGrid.Col>

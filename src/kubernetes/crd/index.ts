@@ -1,1 +1,1 @@
-export * from './CustomResourceDefinitionList';
+export * from './CustomResourceList';
