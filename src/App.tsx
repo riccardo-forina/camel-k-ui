@@ -1,33 +1,50 @@
 import * as React from 'react';
-import { 
-  BrowserRouter as Router, 
-  Route, 
-  Switch 
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch
 } from 'react-router-dom';
-import { 
-  AuthContext, 
+import {
+  AuthContext,
   AuthenticatedRoute,
-  IAuthContext, 
-  Login, 
+  IAuthContext,
+  Login,
   Token,
 } from './auth';
-import { 
-  Explorer
-} from './explorer';
+import {
+  Layout
+} from './layout';
 
 import './App.css';
+import { CustomResourceDefinitionList } from "./kubernetes/crd";
+
+const LayoutWithRoutes = () => (
+  <Layout>
+    <Switch>
+      <Redirect exact={true} path='/' to={'/crd'} />
+      <Route path='/crd' component={CustomResourceDefinitionList} />
+    </Switch>
+  </Layout>
+);
 
 class App extends React.Component<any, IAuthContext> {
-  private TokenWithState: any; 
+  private TokenWithState: any;
 
   public constructor(props: any) {
     super(props);
+    const token = this.getStoredToken();
     this.state = {
-      logged: false
+      authorizationUri: 'https://192.168.64.12:8443/oauth/authorize',
+      clientId: 'camel-k-ui',
+      logged: !!token,
+      redirectUri: 'http://localhost:3000/token/',
+      responseType: 'token',
+      token
     } as IAuthContext;
 
-    this.TokenWithState = (_: any) => (
-      <Token to="/explorer" onToken={this.updateToken} />
+    this.TokenWithState = () => (
+      <Token to="/" onToken={this.updateToken} />
     );
 
     this.updateToken = this.updateToken.bind(this);
@@ -38,9 +55,9 @@ class App extends React.Component<any, IAuthContext> {
       <AuthContext.Provider value={this.state}>
         <Router>
           <Switch>
-            <Route exact={true} path='/' component={Login} />
             <Route path='/token' render={this.TokenWithState} />
-            <AuthenticatedRoute path='/explorer' component={Explorer} />
+            <Route path='/login' component={Login} />
+            <AuthenticatedRoute path='/' component={LayoutWithRoutes} />
           </Switch>
         </Router>
       </AuthContext.Provider>
@@ -48,10 +65,19 @@ class App extends React.Component<any, IAuthContext> {
   }
 
   private updateToken(token: string) {
+    this.storeToken(token);
     this.setState({
       logged: !!token,
       token
     });
+  }
+
+  private getStoredToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  private storeToken(token: string): void {
+    return localStorage.setItem('access_token', token);
   }
 }
 

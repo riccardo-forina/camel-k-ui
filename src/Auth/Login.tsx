@@ -1,15 +1,9 @@
 import * as React from 'react';
+import { AuthContext, IAuthContext } from "./AuthContext";
 
-const config = {
-	authorization: 'https://192.168.64.12:8443/oauth/authorize',
-	client_id: 'camel-k-ui',
-  redirect_uri: 'http://localhost:3000/token/',
-  response_type: 'token'
-};
-
-export class Login extends React.Component<{}> {
+class LoginBase extends React.Component<IAuthContext> {
   public componentWillMount() {
-    const authUrl = `${config.authorization}?client_id=${config.client_id}&redirect_uri=${config.redirect_uri}&response_type=${config.response_type}`;
+    const authUrl = `${this.props.authorizationUri}?client_id=${this.props.clientId}&redirect_uri=${this.props.redirectUri}&response_type=${this.props.responseType}`;
     window.location.href = authUrl;
   }
 
@@ -19,3 +13,11 @@ export class Login extends React.Component<{}> {
     )
   }
 }
+
+export const Login = () => (
+  <AuthContext.Consumer>
+    {props => (
+      <LoginBase {...props} />
+    )}
+  </AuthContext.Consumer>
+)

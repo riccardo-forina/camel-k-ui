@@ -18,7 +18,7 @@ export class AuthenticatedRoute extends React.Component<any> {
         {({ logged }) => (
           logged 
             ? <Component {...componentProps} />
-            : <Redirect to={'/'} />
+            : <Redirect to={'/login'} />
         )}
       </AuthContext.Consumer>
     );
