@@ -1,4 +1,4 @@
-export * from './Kubernetes';
+export * from './pages/home/HomePage';
 export * from './kubernetes.models';
-export * from './KubernetesDirectory';
-export * from './KubernetesRest';
+export * from './pages/home/components/KubernetesDirectory';
+export * from './containers/KubernetesRest';

@@ -12,7 +12,7 @@ export interface IRestProps {
   method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
   body?: any,
   headers?: { [s: string]: string; };
-  children(props: IRestState): JSX.Element;
+  children(props: IRestState): any;
 }
 
 export class Rest extends React.Component<IRestProps, IRestState> {

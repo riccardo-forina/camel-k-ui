@@ -12,7 +12,7 @@ import {
   Login,
   Token,
 } from './auth';
-import { Kubernetes } from './kubernetes';
+import { HomePage } from './kubernetes';
 import { Layout } from './layout';
 
 import './App.css';
@@ -21,7 +21,7 @@ const LayoutWithRoutes = () => (
   <Layout>
     <Switch>
       <Redirect exact={true} path='/' to={'/kubernetes'} />
-      <Route path='/kubernetes' component={Kubernetes} />
+      <Route path='/kubernetes' component={HomePage} />
     </Switch>
   </Layout>
 );

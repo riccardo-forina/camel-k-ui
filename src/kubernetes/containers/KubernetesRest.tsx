@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { AuthContext } from '../auth';
-import { IRestProps, Rest } from "../rest";
+import { AuthContext } from '../../auth/index';
+import { IRestProps, Rest } from '../../rest/index';
 
 
 export class KubernetesRest extends React.Component<IRestProps> {

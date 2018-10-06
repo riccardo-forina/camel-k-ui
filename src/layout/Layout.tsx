@@ -31,7 +31,7 @@ class LayoutBase extends React.Component<RouteComponentProps> {
                 onTitleClick={this.goToHome}
               />
               <VerticalNav.Item
-                title={'Kubernetes'}
+                title={'KubernetesHomepage'}
                 iconClass="fa fa-server"
                 onClick={this.goToKubernetes}
               />
