@@ -11,7 +11,15 @@ export interface IKubernetesRest {
 
 export class KubernetesRest extends React.Component<IKubernetesRest> {
   public render() {
-    const { url, ...props } = this.props;
+    const { url, children, ...props } = this.props;
+    const handleErrorBodyChildren = (({ data, loading, error, ...rest}: IRestState) =>
+      this.props.children({
+        data,
+        error: (!loading && data && data.code && data.code !== 200) ? true : error,
+        loading,
+        ...rest
+      })
+    );
     return (
       <AppContext.Consumer>
         {({ apiUri }) => (
@@ -20,6 +28,7 @@ export class KubernetesRest extends React.Component<IKubernetesRest> {
               <Rest
                 baseUrl={apiUri}
                 url={url}
+                children={handleErrorBodyChildren}
                 { ...props}
                 headers={{'Authorization': `Bearer ${token}`}}
               />

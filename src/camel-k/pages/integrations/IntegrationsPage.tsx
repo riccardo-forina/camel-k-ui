@@ -62,7 +62,7 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
           version={'v1alpha1'}
           namesPlural={'integrations'}
         >
-          {asyncResource => {
+          {({ loading, data, error, save }) => {
             return (
               <React.Fragment>
                 <Toolbar>
@@ -107,9 +107,9 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
                     />
                   </Toolbar.RightContent>
                   <Toolbar.Results>
-                    {asyncResource.loading
+                    {loading
                       ? <div className="spinner" />
-                      : <h5>{asyncResource.data.items.length} Results</h5>
+                      : <h5>{error ? 0 : data.items.length} Results</h5>
                     }
                     {/*{activeFilters &&
                     activeFilters.length > 0 && (
@@ -135,14 +135,14 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
                   </Toolbar.Results>
                 </Toolbar>
 
-                <AsyncCustomResourcesList {...asyncResource}>
-                  {(item, index) => (
+                <AsyncCustomResourcesList data={data} loading={loading} error={error} save={save}>
+                  {(item) => (
                     <Row>
                       <Col sm={12}>
                         <Editor
                           language={specLanguageMapper(item.spec.source.language)}
                           spec={item.spec.source.content}
-                          onSave={makeSaveFunction(asyncResource.save, item)}
+                          onSave={makeSaveFunction(save, item)}
                         />
                       </Col>
                     </Row>

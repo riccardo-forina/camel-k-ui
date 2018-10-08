@@ -73,7 +73,6 @@ export class Rest extends React.Component<IRestProps, IRestState> {
         errorMessage: e.message,
         loading: false,
       });
-      throw new Error(e.message);
     }
   }
 

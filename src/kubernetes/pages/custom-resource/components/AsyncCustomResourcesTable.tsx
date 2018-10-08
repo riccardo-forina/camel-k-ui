@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CustomResourcesTable } from '.';
 import { IRestState } from '../../../../rest';
-import { withLoadingHoc } from '../../../../ui';
+import { RestError, withLoadingHoc } from '../../../../ui';
 import { ICustomResource } from '../../../kubernetes.models';
 
 export interface IAsyncCustomResourcesTable extends IRestState {
@@ -17,5 +17,8 @@ export interface IAsyncCustomResourcesTable extends IRestState {
 }
 
 export const AsyncCustomResourcesTable = withLoadingHoc<IAsyncCustomResourcesTable>(
-  ({ data }) => <CustomResourcesTable resources={data.items} />
+  ({ error, data }) =>
+    error ? <RestError /> : (
+      <CustomResourcesTable resources={data.items} />
+    )
 );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CustomResourceDefinitionsList } from '.';
 import { IRestState } from '../../../../rest';
-import { withLoadingHoc } from '../../../../ui';
+import { RestError, withLoadingHoc } from '../../../../ui';
 import { ICustomResourceDefinition } from '../../../kubernetes.models';
 
 interface IAsyncCustomResourceDefinitionsList extends IRestState {
@@ -18,9 +18,11 @@ interface IAsyncCustomResourceDefinitionsList extends IRestState {
 }
 
 export const AsyncCustomResourceDefinitionsList = withLoadingHoc<IAsyncCustomResourceDefinitionsList>(
-  ({ data, children }) => (
-    <CustomResourceDefinitionsList customResourceDefinitions={data.items}>
-      {props => children(props)}
-    </CustomResourceDefinitionsList>
+  ({ error, data, children }) => (
+    error ? <RestError /> : (
+      <CustomResourceDefinitionsList customResourceDefinitions={data.items}>
+        {props => children(props)}
+      </CustomResourceDefinitionsList>
+    )
   )
 );
