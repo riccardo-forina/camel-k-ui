@@ -1,12 +1,15 @@
 import {
+  Col,
   Filter,
   FormControl,
+  Row,
   Sort,
   Toolbar,
 } from 'patternfly-react';
 import * as React from 'react';
 import { AsyncCustomResourcesList } from '../../../kubernetes/pages/custom-resource/components';
 import { WithCustomResources } from '../../../kubernetes/pages/custom-resource/containers';
+import { SpecEditor } from '../../../ui';
 
 export interface IIntegrationPageState {
   activeFilters: string[],
@@ -17,7 +20,7 @@ export interface IIntegrationPageState {
   currentSortType: string,
   currentValue: string,
   filterCategory: any,
-  isSortAscending: boolean
+  isSortAscending: boolean,
 }
 
 export class IntegrationsPage extends React.Component<{}, IIntegrationPageState> {
@@ -37,7 +40,7 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
     return (
       <div className={'container-fluid'}>
         <WithCustomResources group={'camel.apache.org'} version={'v1alpha1'} namesPlural={'integrations'}>
-          {result => {
+          {asyncResource => {
             return (
               <React.Fragment>
                 <Toolbar>
@@ -82,9 +85,9 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
                     />
                   </Toolbar.RightContent>
                   <Toolbar.Results>
-                    {result.loading
+                    {asyncResource.loading
                       ? <div className="spinner" />
-                      : <h5>{result.data.items.length} Results</h5>
+                      : <h5>{asyncResource.data.items.length} Results</h5>
                     }
                     {/*{activeFilters &&
                     activeFilters.length > 0 && (
@@ -110,7 +113,18 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
                   </Toolbar.Results>
                 </Toolbar>
 
-                <AsyncCustomResourcesList {...result} />
+                <AsyncCustomResourcesList {...asyncResource}>
+                  {customResource => (
+                    <Row>
+                      <Col sm={12}>
+                        <SpecEditor
+                          spec={JSON.stringify(customResource.spec, null, 2)}
+                          onSave={asyncResource.save}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+                </AsyncCustomResourcesList>
               </React.Fragment>
             );
           }}

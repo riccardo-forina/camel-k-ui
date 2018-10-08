@@ -26,10 +26,7 @@ export interface IWithCustomResourcesProps {
 export class WithCustomResources extends React.Component<IWithCustomResourcesProps> {
   public render() {
     return (
-      <KubernetesRest
-        url={`/apis/${this.props.group}/${this.props.version}/${this.props.namesPlural}`}
-        method={'GET'}
-      >
+      <KubernetesRest url={`/apis/${this.props.group}/${this.props.version}/${this.props.namesPlural}`}>
         {props => this.props.children(props)}
       </KubernetesRest>
     )

@@ -13,9 +13,10 @@ export interface IAsyncCustomResourcesList extends IRestState {
       resourceVersion: string;
     };
     items: ICustomResource[];
-  }
+  };
+  children(customResource: ICustomResource): any;
 }
 
 export const AsyncCustomResourcesList = withLoadingHoc<IAsyncCustomResourcesList>(
-  ({ data }) => <CustomResourcesList resources={data.items} />
+  ({ data, children }) => <CustomResourcesList resources={data.items} children={children} />
 );
