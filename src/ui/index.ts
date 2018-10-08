@@ -1,3 +1,3 @@
-export * from './SpecEditor';
+export * from './Editor';
 export * from './patternfly';
 export * from './withLoadingHoc';

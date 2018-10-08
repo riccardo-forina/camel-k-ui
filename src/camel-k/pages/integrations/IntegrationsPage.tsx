@@ -7,9 +7,25 @@ import {
   Toolbar,
 } from 'patternfly-react';
 import * as React from 'react';
+import { ICustomResource } from '../../../kubernetes';
 import { AsyncCustomResourcesList } from '../../../kubernetes/pages/custom-resource/components';
 import { WithCustomResources } from '../../../kubernetes/pages/custom-resource/containers';
-import { SpecEditor } from '../../../ui';
+import { Editor } from '../../../ui';
+
+export function integrationSpecLanguageMapper(language: string) {
+  const langsMap = {
+    'js': 'javascript',
+  };
+  return langsMap[language] || null;
+}
+
+export function makeIntegrationSaveFunction(save: any, integration: ICustomResource) {
+  return (content: string) => {
+    const newIntegration = { ...integration};
+    newIntegration.spec.source.content = content;
+    save(JSON.stringify(newIntegration));
+  }
+}
 
 export interface IIntegrationPageState {
   activeFilters: string[],
@@ -39,7 +55,12 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
   public render() {
     return (
       <div className={'container-fluid'}>
-        <WithCustomResources group={'camel.apache.org'} version={'v1alpha1'} namesPlural={'integrations'}>
+        <WithCustomResources
+          group={'camel.apache.org'}
+          version={'v1alpha1'}
+          namesPlural={'integrations'}
+          namesSingular={'integration'}
+        >
           {asyncResource => {
             return (
               <React.Fragment>
@@ -117,9 +138,10 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
                   {customResource => (
                     <Row>
                       <Col sm={12}>
-                        <SpecEditor
-                          spec={JSON.stringify(customResource.spec, null, 2)}
-                          onSave={asyncResource.save}
+                        <Editor
+                          language={integrationSpecLanguageMapper(customResource.spec.source.language)}
+                          spec={customResource.spec.source.content}
+                          onSave={makeIntegrationSaveFunction(asyncResource.save, customResource)}
                         />
                       </Col>
                     </Row>

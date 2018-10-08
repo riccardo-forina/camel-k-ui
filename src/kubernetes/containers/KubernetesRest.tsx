@@ -5,11 +5,16 @@ import { IRestProps, Rest } from '../../rest/index';
 
 export class KubernetesRest extends React.Component<IRestProps> {
   public render() {
-    const { url, ...props } = this.props;
+    const { getUrl, putUrl, ...props } = this.props;
     return (
       <AuthContext.Consumer>
         {({ token }) => (
-          <Rest url={`https://192.168.64.12:8443${url}`} { ...props} headers={{'Authorization': `Bearer ${token}`}} />
+          <Rest
+            getUrl={`https://192.168.64.12:8443${getUrl}`}
+            putUrl={`https://192.168.64.12:8443${putUrl}`}
+            { ...props}
+            headers={{'Authorization': `Bearer ${token}`}}
+          />
         )}
       </AuthContext.Consumer>
     )

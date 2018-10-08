@@ -14,7 +14,12 @@ export class CustomResourceListPage extends React.Component<{}> {
           {crdsResult =>
             <AsyncCustomResourceDefinitionsList {...crdsResult}>
               {crd => (
-                <WithCustomResources group={crd.spec.group} version={crd.spec.version} namesPlural={crd.spec.names.plural}>
+                <WithCustomResources
+                  group={crd.spec.group}
+                  version={crd.spec.version}
+                  namesPlural={crd.spec.names.plural}
+                  namesSingular={crd.spec.names.singular}
+                >
                   {result => <AsyncCustomResourcesTable {...result} />}
                 </WithCustomResources>
               )}

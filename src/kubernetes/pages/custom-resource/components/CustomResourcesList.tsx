@@ -1,4 +1,4 @@
-import { Button, ListView } from 'patternfly-react';
+import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ICustomResource } from '../../../kubernetes.models';
 
@@ -30,7 +30,6 @@ export class CustomResourcesList extends React.Component<ICustomResourcesList> {
                   {new Date(resource.metadata.creationTimestamp).toLocaleString()}
                 </ListView.InfoItem>,
               ]}
-              actions={<Button>Edit</Button>}
             >
               { this.props.children(resource) }
             </ListView.Item>

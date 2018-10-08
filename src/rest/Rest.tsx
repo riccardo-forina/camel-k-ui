@@ -4,20 +4,20 @@ export interface IHeader {
   [s: string]: string;
 };
 
-export function makeFetch(
+export function callFetch(
   url: string,
-  method: 'GET' | 'POST',
+  method: 'GET' | 'PUT',
   headers?: IHeader,
   body?: any
 ) {
-  return () => fetch(url, {
+  return fetch(url, {
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-cache',
     credentials: 'include',
     headers: headers || {
       'Content-Type': 'application/json; charset=utf-8',
     },
-    method: 'GET',
+    method,
     mode: 'cors',
     redirect: 'follow',
     referrer: 'no-referrer',
@@ -33,7 +33,8 @@ export interface IRestState {
 }
 
 export interface IRestProps {
-  url: string;
+  getUrl: string;
+  putUrl?: string;
   headers?: IHeader;
   children(props: IRestState): any;
 }
@@ -45,13 +46,21 @@ export class Rest extends React.Component<IRestProps, IRestState> {
       data: null,
       error: false,
       loading: true,
-      save: makeFetch(this.props.url, 'POST', this.props.headers)
+      save: this.onSave
     };
   }
 
   public async componentWillMount() {
+    this.read();
+  }
+
+  public render() {
+    return this.props.children(this.state);
+  }
+
+  public read = async () => {
     try {
-      const result = await makeFetch(this.props.url, 'GET', this.props.headers)();
+      const result = await callFetch(this.props.getUrl, 'GET', this.props.headers);
       const data = await result.json();
       this.setState({
         data,
@@ -63,10 +72,26 @@ export class Rest extends React.Component<IRestProps, IRestState> {
         errorMessage: e.message,
         loading: false,
       });
+      throw new Error(e.message);
     }
   }
 
-  public render() {
-    return this.props.children(this.state);
+  public onSave = async (data: any) => {
+    if (!this.props.putUrl) {
+      return;
+    }
+    this.setState({
+      loading: true
+    })
+    try {
+      await callFetch(this.props.putUrl!, 'PUT', this.props.headers, data);
+      await this.read();
+    } catch(e) {
+      this.setState({
+        error: true,
+        errorMessage: e.message,
+        loading: false,
+      });
+    }
   }
 }
