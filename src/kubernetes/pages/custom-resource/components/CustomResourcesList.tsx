@@ -4,7 +4,7 @@ import { ICustomResource } from '../../../kubernetes.models';
 
 export interface ICustomResourcesList {
   resources: ICustomResource[];
-  children(customResource: ICustomResource): any
+  children(customResource: ICustomResource, index: number): any
 }
 
 export class CustomResourcesList extends React.Component<ICustomResourcesList> {
@@ -31,7 +31,7 @@ export class CustomResourcesList extends React.Component<ICustomResourcesList> {
                 </ListView.InfoItem>,
               ]}
             >
-              { this.props.children(resource) }
+              { this.props.children(resource, index) }
             </ListView.Item>
           ))}
         </ListView>

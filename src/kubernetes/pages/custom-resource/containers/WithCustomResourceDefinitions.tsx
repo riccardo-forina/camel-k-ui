@@ -23,9 +23,7 @@ export interface IWithCustomResourceDefinitionsProps {
 export class WithCustomResourceDefinitions extends React.Component<IWithCustomResourceDefinitionsProps> {
   public render() {
     return (
-      <KubernetesRest
-        getUrl={'/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions'}
-      >
+      <KubernetesRest url={'/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions'}>
         {props => this.props.children(props)}
       </KubernetesRest>
     )

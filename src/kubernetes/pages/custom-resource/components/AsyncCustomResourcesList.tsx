@@ -14,7 +14,7 @@ export interface IAsyncCustomResourcesList extends IRestState {
     };
     items: ICustomResource[];
   };
-  children(customResource: ICustomResource): any;
+  children(customResource: ICustomResource, index: number): any;
 }
 
 export const AsyncCustomResourcesList = withLoadingHoc<IAsyncCustomResourcesList>(

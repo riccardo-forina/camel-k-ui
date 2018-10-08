@@ -14,8 +14,9 @@ export function callFetch(
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-cache',
     credentials: 'include',
-    headers: headers || {
+    headers: {
       'Content-Type': 'application/json; charset=utf-8',
+      ...headers
     },
     method,
     mode: 'cors',
@@ -29,12 +30,12 @@ export interface IRestState {
   error: boolean;
   errorMessage?: string;
   loading: boolean;
-  save(data: any): void
+  save(url:string, data: any): void
 }
 
 export interface IRestProps {
-  getUrl: string;
-  putUrl?: string;
+  baseUrl: string;
+  url: string;
   headers?: IHeader;
   children(props: IRestState): any;
 }
@@ -60,7 +61,7 @@ export class Rest extends React.Component<IRestProps, IRestState> {
 
   public read = async () => {
     try {
-      const result = await callFetch(this.props.getUrl, 'GET', this.props.headers);
+      const result = await callFetch(`${this.props.baseUrl}${this.props.url}`, 'GET', this.props.headers);
       const data = await result.json();
       this.setState({
         data,
@@ -76,15 +77,12 @@ export class Rest extends React.Component<IRestProps, IRestState> {
     }
   }
 
-  public onSave = async (data: any) => {
-    if (!this.props.putUrl) {
-      return;
-    }
+  public onSave = async (url: string, data: any) => {
     this.setState({
       loading: true
     })
     try {
-      await callFetch(this.props.putUrl!, 'PUT', this.props.headers, data);
+      await callFetch(`${this.props.baseUrl}${url}`, 'PUT', this.props.headers, data);
       await this.read();
     } catch(e) {
       this.setState({

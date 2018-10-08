@@ -12,18 +12,20 @@ import { AsyncCustomResourcesList } from '../../../kubernetes/pages/custom-resou
 import { WithCustomResources } from '../../../kubernetes/pages/custom-resource/containers';
 import { Editor } from '../../../ui';
 
-export function integrationSpecLanguageMapper(language: string) {
+export function specLanguageMapper(language: string) {
   const langsMap = {
     'js': 'javascript',
   };
   return langsMap[language] || null;
 }
 
-export function makeIntegrationSaveFunction(save: any, integration: ICustomResource) {
+export function makeSaveFunction(
+  save: any,
+  item: ICustomResource) {
   return (content: string) => {
-    const newIntegration = { ...integration};
-    newIntegration.spec.source.content = content;
-    save(JSON.stringify(newIntegration));
+    const newItem = { ...item};
+    newItem.spec.source.content = content;
+    save(newItem.metadata.selfLink, newItem);
   }
 }
 
@@ -59,7 +61,6 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
           group={'camel.apache.org'}
           version={'v1alpha1'}
           namesPlural={'integrations'}
-          namesSingular={'integration'}
         >
           {asyncResource => {
             return (
@@ -135,13 +136,13 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationPageState>
                 </Toolbar>
 
                 <AsyncCustomResourcesList {...asyncResource}>
-                  {customResource => (
+                  {(item, index) => (
                     <Row>
                       <Col sm={12}>
                         <Editor
-                          language={integrationSpecLanguageMapper(customResource.spec.source.language)}
-                          spec={customResource.spec.source.content}
-                          onSave={makeIntegrationSaveFunction(asyncResource.save, customResource)}
+                          language={specLanguageMapper(item.spec.source.language)}
+                          spec={item.spec.source.content}
+                          onSave={makeSaveFunction(asyncResource.save, item)}
                         />
                       </Col>
                     </Row>
