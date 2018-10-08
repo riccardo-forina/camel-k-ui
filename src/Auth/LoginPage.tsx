@@ -14,7 +14,7 @@ class LoginBase extends React.Component<IAuthContext> {
   }
 }
 
-export const Login = () => (
+export const LoginPage = () => (
   <AuthContext.Consumer>
     {props => (
       <LoginBase {...props} />

@@ -11,7 +11,8 @@ import {
   AuthContext,
   AuthenticatedRoute,
   IAuthContext,
-  Login,
+  LoginPage,
+  Logout,
   TokenPage,
 } from './auth';
 import { CamelKHomePage } from './camel-k';
@@ -30,6 +31,14 @@ const PrivateRoutes = () => (
   </Switch>
 );
 
+const WiredLogout = () => (
+ <AppContext.Consumer>
+    {({ logout }) => (
+      <Logout logout={logout} />
+    )}
+  </AppContext.Consumer>
+);
+
 interface IAppState extends IAuthContext, IAppContext {
   firstSetup: boolean;
 }
@@ -46,6 +55,7 @@ class App extends React.Component<RouteComponentProps, IAppState> {
       clientId: 'camel-k-ui',
       firstSetup: this.getPersistedValue('setupDone') === null,
       logged: !!token,
+      logout: this.logout,
       redirectUri: document.location!.origin + '/token',
       responseType: 'token',
       saveSettings: this.saveSettings,
@@ -84,7 +94,8 @@ class App extends React.Component<RouteComponentProps, IAppState> {
             <React.Fragment>
               <Switch>
                 <Route path='/token' render={this.TokenWithState} />
-                <Route path='/login' component={Login} />
+                <Route path='/login' component={LoginPage} />
+                <Route path='/logout' component={WiredLogout} />
                 <Route path='/settings' component={SettingsPage} />
                 <AuthenticatedRoute path='/' component={PrivateRoutes} />
               </Switch>
@@ -124,6 +135,14 @@ class App extends React.Component<RouteComponentProps, IAppState> {
   private getPersistedValue = (property: string): string | null => {
     return localStorage.getItem(property);
   };
+
+  private logout = (): void => {
+    this.setState({
+      logged: false,
+      token: null
+    });
+    this.props.history.replace('/');
+  }
 }
 
 export default withRouter(App);

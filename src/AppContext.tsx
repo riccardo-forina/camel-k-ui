@@ -7,7 +7,8 @@ export interface IAppSettings {
 
 export interface IAppContext extends IAppSettings{
   firstSetup: boolean;
-  saveSettings(settings: IAppSettings): void
+  saveSettings(settings: IAppSettings): void;
+  logout(): void;
 }
 
 export const AppContextDefaultValue = {
