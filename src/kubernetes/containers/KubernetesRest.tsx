@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AppContext } from '../../AppContext';
 import { AuthContext } from '../../auth/index';
 import { IRestState, Rest } from '../../rest/index';
 
@@ -12,16 +13,20 @@ export class KubernetesRest extends React.Component<IKubernetesRest> {
   public render() {
     const { url, ...props } = this.props;
     return (
-      <AuthContext.Consumer>
-        {({ token }) => (
-          <Rest
-            baseUrl={`https://192.168.64.12:8443`}
-            url={url}
-            { ...props}
-            headers={{'Authorization': `Bearer ${token}`}}
-          />
+      <AppContext.Consumer>
+        {({ apiUri }) => (
+          <AuthContext.Consumer>
+            {({ token }) => (
+              <Rest
+                baseUrl={apiUri}
+                url={url}
+                { ...props}
+                headers={{'Authorization': `Bearer ${token}`}}
+              />
+            )}
+          </AuthContext.Consumer>
         )}
-      </AuthContext.Consumer>
+      </AppContext.Consumer>
     )
   }
 }

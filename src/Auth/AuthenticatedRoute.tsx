@@ -6,6 +6,7 @@ import {
 import {
   AuthContext,
 } from '.';
+import { AppContext } from '../AppContext';
 
 export class AuthenticatedRoute extends React.Component<any> {
   private Component: any;
@@ -14,13 +15,17 @@ export class AuthenticatedRoute extends React.Component<any> {
 
     const { component: Component, ...componentProps } = props;
     this.Component = () => (
-      <AuthContext.Consumer>
-        {({ logged }) => (
-          logged
-            ? <Component {...componentProps} />
-            : <Redirect to={'/login'} />
+      <AppContext.Consumer>
+        {({ firstSetup }) => (
+          <AuthContext.Consumer>
+            {({ logged }) => (
+              logged
+                ? <Component {...componentProps} />
+                : <Redirect to={firstSetup ? '/settings' : '/login'} />
+            )}
+          </AuthContext.Consumer>
         )}
-      </AuthContext.Consumer>
+      </AppContext.Consumer>
     );
   }
   public render() {

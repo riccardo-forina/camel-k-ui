@@ -3,7 +3,7 @@ import { AuthContext, IAuthContext } from "./AuthContext";
 
 class LoginBase extends React.Component<IAuthContext> {
   public componentWillMount() {
-    const authUrl = `${this.props.authorizationUri}?client_id=${this.props.clientId}&redirect_uri=${this.props.redirectUri}&response_type=${this.props.responseType}`;
+    const authUrl = `${this.props.authorizationUri}?client_id=${this.props.clientId}&response_type=${this.props.responseType}&redirect_uri=${encodeURIComponent(this.props.redirectUri)}`;
     window.location.href = authUrl;
   }
 

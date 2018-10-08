@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Redirect } from 'react-router-dom';
 
-export interface ITokenProps {
+export interface ITokenPageProps {
   to: string;
   onToken(token: string | null): void
 }
 
-export class Token extends React.Component<ITokenProps> {
+export class TokenPage extends React.Component<ITokenPageProps> {
   public componentWillMount() {
     // // eslint-disable-next-line
     const hash = document.location!.hash;
