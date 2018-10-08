@@ -12,17 +12,39 @@ import {
   Login,
   Token,
 } from './auth';
-import { HomePage } from './kubernetes';
+import { CamelKHomePage } from './camel-k';
+import { KubernetesHomePage } from './kubernetes';
 import { Layout } from './layout';
 
 import './App.css';
+import { PfNavLink } from './ui/patternfly';
+
 
 const LayoutWithRoutes = () => (
   <Layout>
-    <Switch>
-      <Redirect exact={true} path='/' to={'/kubernetes'} />
-      <Route path='/kubernetes' component={HomePage} />
-    </Switch>
+    {() => ({
+      content: (
+        <Switch>
+          <Redirect exact={true} path='/' to={'/camel-k'} />
+          <Route path='/camel-k' component={CamelKHomePage} />
+          <Route path='/kubernetes' component={KubernetesHomePage} />
+        </Switch>
+      ),
+      navbar: (
+        <ul className='persistent-secondary nav navbar-nav navbar-primary'>
+          <PfNavLink to={'/camel-k'} label={'Camel-k'}>
+            <ul className="nav navbar-nav navbar-persistent">
+              <PfNavLink to={'/camel-k'} label={'Integrations'} />
+            </ul>
+          </PfNavLink>
+          <PfNavLink to={'/kubernetes'} label={'Kubernetes'}>
+            <ul className="nav navbar-nav navbar-persistent">
+              <PfNavLink to={'/kubernetes/custom-resources'} label={'Custom Resources'} />
+            </ul>
+          </PfNavLink>
+        </ul>
+      ),
+    })}
   </Layout>
 );
 
@@ -42,7 +64,7 @@ class App extends React.Component<any, IAuthContext> {
     } as IAuthContext;
 
     this.TokenWithState = () => (
-      <Token to="/" onToken={this.updateToken} />
+      <Token to='/' onToken={this.updateToken} />
     );
 
     this.updateToken = this.updateToken.bind(this);

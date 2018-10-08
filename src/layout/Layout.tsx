@@ -1,47 +1,33 @@
 import {
-  VerticalNav
+  Masthead
 } from 'patternfly-react';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import pitto from './camel.pitto.svg';
 import typo from './camel.typo.svg';
 
-class LayoutBase extends React.Component<RouteComponentProps> {
+export interface ILayoutBase extends RouteComponentProps {
+  children(): { navbar: JSX.Element, content: JSX.Element }
+}
+
+class LayoutBase extends React.Component<ILayoutBase> {
 
   public render() {
+    const { navbar, content } = this.props.children();
     return (
-      <div style={{
-        position: 'relative',
-        zIndex: 0,
-      }}>
-        <div style={{
-          height: '100vh',
-          paddingTop: '60px',
-          transform: 'translateZ(0px)',
-        }}>
-          <div className="layout-pf layout-pf-fixed">
-            <VerticalNav sessionKey={'mainMenu'}>
-              <VerticalNav.Masthead
-                iconImg={pitto}
-                titleImg={typo}
-                title="camel-k UI"
-                href={'/'}
-                navToggle={true}
-                onTitleClick={this.goToHome}
-              />
-              <VerticalNav.Item
-                title={'KubernetesHomepage'}
-                iconClass="fa fa-server"
-                onClick={this.goToKubernetes}
-              />
-            </VerticalNav>
-            <main className={"container-fluid container-cards-pf container-pf-nav-pf-vertical nav-pf-persistent-secondary "}>
-              {this.props.children}
-            </main>
-          </div>
-        </div>
-      </div>
+      <React.Fragment>
+        <Masthead
+          thin={true}
+          titleImg={typo}
+          title="camel-k UI"
+          href={'/'}
+          navToggle={false}
+          onTitleClick={this.goToHome}
+        >
+          {navbar}
+        </Masthead>
+        {content}
+      </React.Fragment>
     );
   }
 

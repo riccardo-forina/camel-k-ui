@@ -16,22 +16,7 @@ export interface ICustomResourceDefinition {
       kind: string,
       listKind: string,
     },
-    scope: string,
-    validation: {
-      openAPIV3Schema: {
-        properties: {
-          spec: {
-            properties: {
-              replicas: {
-                type: string,
-                maximum: number,
-                minimum: number
-              }
-            }
-          }
-        }
-      }
-    }
+    scope: string
   },
   status: {
     conditions: Array<{

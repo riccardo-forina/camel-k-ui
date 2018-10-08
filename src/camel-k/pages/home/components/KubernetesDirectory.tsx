@@ -14,7 +14,7 @@ export class KubernetesDirectory extends React.Component<RouteComponentProps> {
   public render() {
     return (
       <React.Fragment>
-        <ol role="navigation" aria-label="breadcrumbs" className="breadcrumb">
+        <ol role="navigation" aria-label="breadcrumbs" className="breadcrumbs-pf-title breadcrumb">
           <li className=""><Link to="/">Home</Link></li>
           <li className="active"><span>Kubernetes</span></li>
         </ol>
