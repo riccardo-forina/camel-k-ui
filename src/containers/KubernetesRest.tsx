@@ -1,17 +1,20 @@
 import * as React from 'react';
 import { AppContext } from '../AppContext';
-import { AuthContext } from '../auth/index';
-import { IRestState, Rest } from './index';
+import { AuthContext } from '../auth';
+import { IRestState, Rest } from './Rest';
+import { Stream } from './Stream';
 
 
 export interface IKubernetesRest {
+  contentType?: string;
   url: string;
+  stream?: boolean;
   children(props: IRestState): any;
 }
 
 export class KubernetesRest extends React.Component<IKubernetesRest> {
   public render() {
-    const { url, children, ...props } = this.props;
+    const { url, children, stream, ...props } = this.props;
     const handleErrorBodyChildren = (({ data, loading, error, ...rest}: IRestState) =>
       this.props.children({
         data,
@@ -20,12 +23,15 @@ export class KubernetesRest extends React.Component<IKubernetesRest> {
         ...rest
       })
     );
+
+    const RestOrStream = stream ? Stream : Rest;
+
     return (
       <AppContext.Consumer>
         {({ apiUri }) => (
           <AuthContext.Consumer>
             {({ token }) => (
-              <Rest
+              <RestOrStream
                 baseUrl={apiUri}
                 url={url}
                 children={handleErrorBodyChildren}

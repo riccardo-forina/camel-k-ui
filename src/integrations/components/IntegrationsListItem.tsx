@@ -2,7 +2,7 @@ import {
   Grid,
   ListView,
 } from 'patternfly-react';import * as React from 'react';
-import { ICustomResource } from '../../containers';
+import { ICustomResource, WithIntegrationLogs } from '../../containers';
 import { Editor } from '../../ui';
 
 export function specLanguageMapper(language: string) {
@@ -82,7 +82,25 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
           </Grid.Row>
         )}
         {this.state.expandedProp === 'logs' && (
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta, dolorum est eveniet ex maxime modi nihil omnis perferendis quod, quos, repellat voluptas. Ducimus esse impedit molestias nulla provident quia veritatis?</p>
+          <WithIntegrationLogs
+            namespace={this.props.integration.metadata.namespace}
+            integrationName={this.props.integration.metadata.name}
+          >
+            {(asyncLogs) =>
+              <textarea
+                value={asyncLogs.data}
+                disabled={true}
+                style={{
+                  background: '#333',
+                  color: '#fafafa',
+                  fontFamily: 'monospace',
+                  height: '100%',
+                  minHeight: '600px',
+                  width: '100%',
+                }}
+              />
+            }
+          </WithIntegrationLogs>
         )}
       </ListView.Item>
     )
