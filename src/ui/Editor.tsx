@@ -58,7 +58,7 @@ export class Editor extends React.Component<ISpecEditorProps, ISpecEditorState> 
           <Col sm={12}>
             <MonacoEditor
               width="100%"
-              height="400"
+              height="300"
               language={this.props.language}
               theme="vs"
               value={this.state.editedSpec}

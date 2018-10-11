@@ -1,36 +1,17 @@
 import {
-  Col,
   DropdownButton,
   EmptyState,
   Filter,
   FormControl,
+  ListView,
   MenuItem,
-  Row,
   Sort,
   Toolbar,
 } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ICustomResource, IProject } from '../../containers';
-import { CustomResourcesList } from '../../custom-resource-definitions/components';
-import { Editor } from '../../ui';
-
-export function specLanguageMapper(language: string) {
-  const langsMap = {
-    'js': 'javascript',
-  };
-  return langsMap[language] || null;
-}
-
-export function makeSaveFunction(
-  save: (url: string, integration: ICustomResource) => void,
-  item: ICustomResource) {
-  return (content: string) => {
-    const newItem: ICustomResource = { ...item};
-    newItem.spec.source.content = content;
-    save(newItem.metadata.selfLink, newItem);
-  }
-}
+import { IntegrationsListItem } from './IntegrationsListItem';
 
 export interface IIntegrationsListProps {
   match: any;
@@ -110,6 +91,7 @@ export class IntegrationsList extends React.Component<IIntegrationsListProps, II
           </div>
           <Toolbar.RightContent>
             <DropdownButton
+              id={'namespace-switcher'}
               bsStyle={'primary'}
               title={`Project: ${this.props.project}`}
               pullRight={true}
@@ -154,19 +136,15 @@ export class IntegrationsList extends React.Component<IIntegrationsListProps, II
         </Toolbar>
 
         <div className="container-fluid">
-          <CustomResourcesList resources={this.props.integrations}>
-            {(resource) => (
-              <Row>
-                <Col sm={12}>
-                  <Editor
-                    language={specLanguageMapper(resource.spec.source.language)}
-                    spec={resource.spec.source.content}
-                    onSave={makeSaveFunction(this.props.onSaveIntegration, resource)}
-                  />
-                </Col>
-              </Row>
-            )}
-          </CustomResourcesList>
+          <ListView>
+            {this.props.integrations.map((integration, index) => (
+              <IntegrationsListItem
+                integration={integration}
+                key={index}
+                onSaveIntegration={this.props.onSaveIntegration}
+              />
+            ))}
+          </ListView>
 
           {!this.props.loading && this.props.integrations.length === 0 && (
             <EmptyState>
