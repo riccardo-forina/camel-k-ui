@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { WithCustomResources, WithProjects } from '../containers';
+import { WithRouter } from '../containers/WithRouter';
 import { IntegrationsList } from './components/IntegrationsList';
 
 export interface IIntegrationsPageState {
@@ -13,29 +14,34 @@ export class IntegrationsPage extends React.Component<{}, IIntegrationsPageState
 
   public render() {
     return (
-      <WithProjects>
-        {asyncProjects =>
-          !(asyncProjects.loading || asyncProjects.error) ? (
-            <WithCustomResources
-              group={'camel.apache.org'}
-              version={'v1alpha1'}
-              namesPlural={'integrations'}
-              namespace={this.state.project}
-            >
-              {asyncIntegrations => (
-                <IntegrationsList
-                  loading={asyncIntegrations.loading}
-                  project={this.state.project}
-                  projects={asyncProjects.data.items}
-                  integrations={asyncIntegrations.data ? asyncIntegrations.data.items : []}
-                  onSaveIntegration={asyncIntegrations.save}
-                  onChangeProject={this.setNamespace}
-                />
-              )}
-            </WithCustomResources>
-          ) : <div className="spinner"/>
+      <WithRouter>
+        {router =>
+          <WithProjects>
+            {asyncProjects =>
+              !(asyncProjects.loading || asyncProjects.error) ? (
+                <WithCustomResources
+                  group={'camel.apache.org'}
+                  version={'v1alpha1'}
+                  namesPlural={'integrations'}
+                  namespace={this.state.project}
+                >
+                  {asyncIntegrations => (
+                    <IntegrationsList
+                      match={router.match}
+                      loading={asyncIntegrations.loading}
+                      project={this.state.project}
+                      projects={asyncProjects.data.items}
+                      integrations={asyncIntegrations.data ? asyncIntegrations.data.items : []}
+                      onSaveIntegration={asyncIntegrations.save}
+                      onChangeProject={this.setNamespace}
+                    />
+                  )}
+                </WithCustomResources>
+              ) : <div className="spinner"/>
+            }
+          </WithProjects>
         }
-      </WithProjects>
+      </WithRouter>
     );
   }
 

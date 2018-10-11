@@ -1,6 +1,7 @@
 import {
   Col,
   DropdownButton,
+  EmptyState,
   Filter,
   FormControl,
   MenuItem,
@@ -9,6 +10,7 @@ import {
   Toolbar,
 } from 'patternfly-react';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { ICustomResource, IProject } from '../../containers';
 import { CustomResourcesList } from '../../custom-resource-definitions/components';
 import { Editor } from '../../ui';
@@ -31,6 +33,7 @@ export function makeSaveFunction(
 }
 
 export interface IIntegrationsListProps {
+  match: any;
   loading: boolean;
   project: string;
   projects: IProject[];
@@ -97,8 +100,20 @@ export class IntegrationsList extends React.Component<IIntegrationsListProps, II
               onClick={null}
             />
           </Sort>
+          <div className="form-group">
+            <Link
+              to={`${this.props.match.url}/new`}
+              className={'btn btn-default'}
+            >
+              New integration
+            </Link>
+          </div>
           <Toolbar.RightContent>
-            <DropdownButton title={`Project: ${this.props.project}`} pullRight={true}>
+            <DropdownButton
+              bsStyle={'primary'}
+              title={`Project: ${this.props.project}`}
+              pullRight={true}
+            >
               {this.props.projects.map((project: IProject, index: number) =>
                 <MenuItem
                   key={index}
@@ -152,6 +167,19 @@ export class IntegrationsList extends React.Component<IIntegrationsListProps, II
               </Row>
             )}
           </CustomResourcesList>
+
+          {!this.props.loading && this.props.integrations.length === 0 && (
+            <EmptyState>
+              <EmptyState.Icon />
+              <EmptyState.Title>There are no integrations</EmptyState.Title>
+              <EmptyState.Info>
+                We couldn't find any integration under the <strong>{this.props.project}</strong> namespace.
+              </EmptyState.Info>
+              <EmptyState.Action>
+                <Link to={`${this.props.match.url}/new`} className={'btn btn-lg btn-primary'}>Create your first integration</Link>
+              </EmptyState.Action>
+            </EmptyState>
+          )}
         </div>
       </React.Fragment>
     );
