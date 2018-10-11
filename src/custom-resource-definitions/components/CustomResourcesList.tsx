@@ -1,6 +1,6 @@
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
-import { ICustomResource } from '../../../kubernetes.models';
+import { ICustomResource } from '../../containers/kubernetes.models';
 
 export interface ICustomResourcesList {
   resources: ICustomResource[];

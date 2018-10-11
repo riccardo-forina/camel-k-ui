@@ -15,19 +15,19 @@ import {
   Logout,
   TokenPage,
 } from './auth';
-import { CamelKHomePage } from './camel-k';
-import { KubernetesHomePage } from './kubernetes';
+import { CustomResourceDefinitionsPage } from './custom-resource-definitions';
+import { IntegrationsPage } from './integrations';
 import { Layout } from './layout';
 
 import './App.css';
 import { SettingsPage } from './settings';
-import { PfNavLink } from './ui/patternfly';
+import { PfVerticalNavItem } from './ui/patternfly';
 
 const PrivateRoutes = () => (
   <Switch>
-    <Redirect exact={true} path='/' to={'/camel-k'} />
-    <Route path='/camel-k' component={CamelKHomePage} />
-    <Route path='/kubernetes' component={KubernetesHomePage} />
+    <Redirect exact={true} path='/' to={'/integrations'} />
+    <Route path='/integrations' component={IntegrationsPage} />
+    <Route path='/crd' component={CustomResourceDefinitionsPage} />
   </Switch>
 );
 
@@ -41,6 +41,7 @@ const WiredLogout = () => (
 
 interface IAppState extends IAuthContext, IAppContext {
   firstSetup: boolean;
+  lastUsedProject?: string;
 }
 
 class App extends React.Component<RouteComponentProps, IAppState> {
@@ -54,6 +55,7 @@ class App extends React.Component<RouteComponentProps, IAppState> {
       authorizationUri: this.getPersistedValue('authorizationUri') || '',
       clientId: 'camel-k-ui',
       firstSetup: this.getPersistedValue('setupDone') === null,
+      lastUsedProject: this.getPersistedValue('lastUsedProject') || 'default',
       logged: !!token,
       logout: this.logout,
       redirectUri: document.location!.origin + '/token',
@@ -75,22 +77,7 @@ class App extends React.Component<RouteComponentProps, IAppState> {
     return (
       <AppContext.Provider value={this.state}>
         <AuthContext.Provider value={this.state}>
-          <Layout navbar={
-            this.state.logged ? (
-              <ul className='persistent-secondary nav navbar-nav navbar-primary'>
-                <PfNavLink to={'/camel-k'} label={'Camel-k'}>
-                  <ul className="nav navbar-nav navbar-persistent">
-                    <PfNavLink to={'/camel-k'} label={'Integrations'} />
-                  </ul>
-                </PfNavLink>
-                <PfNavLink to={'/kubernetes'} label={'Kubernetes'}>
-                  <ul className="nav navbar-nav navbar-persistent">
-                    <PfNavLink to={'/kubernetes/custom-resources'} label={'Custom Resources'} />
-                  </ul>
-                </PfNavLink>
-              </ul>
-            ) : null
-          }>
+          <Layout navbar={this.renderNavbar()}>
             <React.Fragment>
               <Switch>
                 <Route path='/token' render={this.TokenWithState} />
@@ -104,6 +91,23 @@ class App extends React.Component<RouteComponentProps, IAppState> {
         </AuthContext.Provider>
       </AppContext.Provider>
     );
+  }
+
+  public renderNavbar() {
+    return [
+      <PfVerticalNavItem
+        icon={'server'}
+        to={'/integrations'}
+        label={'Integrations'}
+        key={1}
+      />,
+      <PfVerticalNavItem
+        icon={'sitemap'}
+        to={'/crd'}
+        label={'Custom Resource Definitions'}
+        key={2}
+      />,
+    ];
   }
 
   private updateToken = (token: string) => {

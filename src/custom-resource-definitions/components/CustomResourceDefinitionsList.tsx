@@ -4,7 +4,7 @@ import {
   Row,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ICustomResourceDefinition } from '../../../kubernetes.models';
+import { ICustomResourceDefinition } from '../../containers/kubernetes.models';
 
 export interface ICustomResourceDefinitionsListProps {
   customResourceDefinitions: ICustomResourceDefinition[],

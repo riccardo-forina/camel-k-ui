@@ -55,6 +55,12 @@ export class Rest extends React.Component<IRestProps, IRestState> {
     this.read();
   }
 
+  public async componentDidUpdate(prevProps: IRestProps) {
+    if (prevProps.url !== this.props.url) {
+      this.read();
+    }
+  }
+
   public render() {
     return this.props.children(this.state);
   }

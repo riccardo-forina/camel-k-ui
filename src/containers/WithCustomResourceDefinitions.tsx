@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { ICustomResourceDefinition, KubernetesRest } from '../../..';
-import { IRestState } from '../../../../rest';
+import { ICustomResourceDefinition, IRestState, KubernetesRest } from './index';
 
 
 interface ICustomResourceDefinitionResponse extends IRestState {

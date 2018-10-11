@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { AppContext } from '../../AppContext';
-import { AuthContext } from '../../auth/index';
-import { IRestState, Rest } from '../../rest/index';
+import { AppContext } from '../AppContext';
+import { AuthContext } from '../auth/index';
+import { IRestState, Rest } from './index';
 
 
 export interface IKubernetesRest {

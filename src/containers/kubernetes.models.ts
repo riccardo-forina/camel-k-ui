@@ -46,3 +46,15 @@ export interface ICustomResource {
   }
 }
 
+
+export interface IProject {
+  apiVersion: string;
+  kind: string;
+  metadata: any,
+  spec: any,
+  status: {
+    phase: string;
+    version: string;
+  }
+}
+

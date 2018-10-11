@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { ICustomResource, KubernetesRest } from '../../..';
-import { IRestState } from '../../../../rest';
+import { ICustomResource, IRestState, KubernetesRest } from './index';
 
 
 export interface ICustomResourcesResponse extends IRestState {
@@ -20,13 +19,18 @@ export interface IWithCustomResourcesProps {
   group: string;
   version: string;
   namesPlural: string;
+  namespace?: string;
   children(props: ICustomResourcesResponse): any;
 }
 
 export class WithCustomResources extends React.Component<IWithCustomResourcesProps> {
   public render() {
     return (
-      <KubernetesRest url={`/apis/${this.props.group}/${this.props.version}/${this.props.namesPlural}`}>
+      <KubernetesRest url={
+        this.props.namespace
+          ? `/apis/${this.props.group}/${this.props.version}/namespaces/${this.props.namespace}/${this.props.namesPlural}`
+          : `/apis/${this.props.group}/${this.props.version}/${this.props.namesPlural}`
+      }>
         {props => this.props.children(props)}
       </KubernetesRest>
     )

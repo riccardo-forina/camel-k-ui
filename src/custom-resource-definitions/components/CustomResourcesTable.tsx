@@ -2,7 +2,7 @@ import {
   Table
 } from 'patternfly-react';
 import * as React from 'react';
-import { ICustomResource } from '../../../kubernetes.models';
+import { ICustomResource } from '../../containers/kubernetes.models';
 
 const headerFormat = (value: any) => <Table.Heading>{value}</Table.Heading>;
 const cellFormat = (value: any) => <Table.Cell>{value}</Table.Cell>;

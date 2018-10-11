@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { CustomResourcesTable } from '.';
-import { IRestState } from '../../../../rest';
-import { RestError, withLoadingHoc } from '../../../../ui';
-import { ICustomResource } from '../../../kubernetes.models';
+import { IRestState } from '../../containers/index';
+import { ICustomResource } from '../../containers/kubernetes.models';
+import { RestError, withLoadingHoc } from '../../ui/index';
+import { CustomResourcesTable } from './index';
 
 export interface IAsyncCustomResourcesTable extends IRestState {
   data: {

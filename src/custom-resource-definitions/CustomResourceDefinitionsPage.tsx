@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { AsyncCustomResourceDefinitionsList, AsyncCustomResourcesTable } from './components';
 import {
   WithCustomResourceDefinitions,
   WithCustomResources
-} from './containers';
+} from '../containers';
+import { AsyncCustomResourceDefinitionsList, AsyncCustomResourcesTable } from './components/index';
 
 
-export class CustomResourceListPage extends React.Component<{}> {
+export class CustomResourceDefinitionsPage extends React.Component<{}> {
   public render() {
     return (
       <div className={'container-fluid'}>
