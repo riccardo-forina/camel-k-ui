@@ -87,8 +87,11 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
             namespace={this.props.integration.metadata.namespace}
             integrationName={this.props.integration.metadata.name}
           >
-            {(asyncLogs) =>
-              <LogViewer data={asyncLogs.data || []} />
+            {({logs, pod}) =>
+              <React.Fragment>
+                <h2>Pod: {pod && pod.metadata.name} ({pod && pod.status.phase})</h2>
+                <LogViewer data={logs || []} />
+              </React.Fragment>
             }
           </WithIntegrationLogs>
         )}

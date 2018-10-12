@@ -1,7 +1,16 @@
-import { callFetch, Rest } from './Rest';
+import { callFetch, IRestProps, Rest } from './Rest';
 
 export class Stream extends Rest {
   protected reader: ReadableStreamReader;
+
+  public async componentDidUpdate(prevProps: IRestProps) {
+    if (prevProps.url !== this.props.url) {
+      if (this.reader) {
+        this.reader.cancel();
+      }
+      this.read();
+    }
+  }
 
   public componentWillUnmount() {
     if (this.reader) {

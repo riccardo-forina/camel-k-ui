@@ -7,6 +7,7 @@ import { Stream } from './Stream';
 
 export interface IKubernetesRest {
   contentType?: string;
+  poll?: number;
   url: string;
   stream?: boolean;
   children(props: IRestState): any;

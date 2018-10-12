@@ -44,6 +44,7 @@ export interface IRestState {
 
 export interface IRestProps {
   baseUrl: string;
+  poll?: number;
   url: string;
   headers?: IHeader;
   contentType?: string;
@@ -51,6 +52,8 @@ export interface IRestProps {
 }
 
 export class Rest extends React.Component<IRestProps, IRestState> {
+  public pollingTimer?: number;
+
   public constructor(props: IRestProps) {
     super(props);
     this.state = {
@@ -63,11 +66,23 @@ export class Rest extends React.Component<IRestProps, IRestState> {
 
   public async componentWillMount() {
     this.read();
+
+    if (this.props.poll) {
+      this.startPolling();
+    }
   }
 
   public async componentDidUpdate(prevProps: IRestProps) {
     if (prevProps.url !== this.props.url) {
       this.read();
+    }
+
+    if (prevProps.poll !== this.props.poll) {
+      if (this.props.poll) {
+        this.startPolling();
+      } else {
+        this.stopPolling();
+      }
     }
   }
 
@@ -121,6 +136,19 @@ export class Rest extends React.Component<IRestProps, IRestState> {
         errorMessage: e.message,
         loading: false,
       });
+    }
+  }
+
+  public startPolling = () => {
+    this.stopPolling();
+
+    this.pollingTimer = setInterval(this.read, this.props.poll);
+  }
+
+  public stopPolling = () => {
+    if (this.pollingTimer) {
+      clearInterval(this.pollingTimer);
+      this.pollingTimer = undefined;
     }
   }
 }
