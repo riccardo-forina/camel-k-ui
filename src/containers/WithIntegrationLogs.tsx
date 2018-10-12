@@ -3,7 +3,7 @@ import { IRestState, KubernetesRest } from './index';
 
 
 interface IIntegrationLogsResponse extends IRestState {
-  data: string
+  data: string[]
 }
 
 
@@ -26,7 +26,7 @@ export class WithIntegrationLogs extends React.Component<IWithIntegrationLogsPro
                 <KubernetesRest
                   stream={true}
                   contentType={'text/plain'}
-                  url={`/api/v1/namespaces/${this.props.namespace}/pods/${asyncPods.data.items[0].metadata.name}/log?tailLines=20&follow=true`}>
+                  url={`/api/v1/namespaces/${this.props.namespace}/pods/${asyncPods.data.items[0].metadata.name}/log?tailLines=1&follow=true`}>
                   {asyncLogs => this.props.children(asyncLogs)}
                 </KubernetesRest>
               )

@@ -32,7 +32,7 @@ export class Stream extends Rest {
               });
             } else {
               this.setState({
-                data: (this.state.data || '')+ textDecoder.decode(value)
+                data: [...(this.state.data || []), textDecoder.decode(value)]
               });
 
               this.reader

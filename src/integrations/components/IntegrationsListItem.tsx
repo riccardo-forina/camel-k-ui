@@ -3,7 +3,7 @@ import {
   ListView,
 } from 'patternfly-react';import * as React from 'react';
 import { ICustomResource, WithIntegrationLogs } from '../../containers';
-import { Editor } from '../../ui';
+import { Editor, LogViewer } from '../../ui';
 
 export function specLanguageMapper(language: string) {
   const langsMap = {
@@ -66,9 +66,10 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
         compoundExpanded={this.state.expanded}
         description={'Created: ' + new Date(this.props.integration.metadata.creationTimestamp).toLocaleString()}
         heading={this.props.integration.metadata.name}
-        hideCloseIcon={false}
+        hideCloseIcon={true}
         leftContent={<ListView.Icon name={'gear'} />}
         onCloseCompoundExpand={this.closeExpanded}
+        stacked={true}
       >
         {this.state.expandedProp === 'source' && (
           <Grid.Row>
@@ -87,18 +88,7 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
             integrationName={this.props.integration.metadata.name}
           >
             {(asyncLogs) =>
-              <textarea
-                value={asyncLogs.data}
-                disabled={true}
-                style={{
-                  background: '#333',
-                  color: '#fafafa',
-                  fontFamily: 'monospace',
-                  height: '100%',
-                  minHeight: '600px',
-                  width: '100%',
-                }}
-              />
+              <LogViewer data={asyncLogs.data || []} />
             }
           </WithIntegrationLogs>
         )}
