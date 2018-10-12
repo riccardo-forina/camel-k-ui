@@ -10,7 +10,7 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ICustomResource, IProject } from '../../containers';
+import { ICustomResource, IProject, WithPods } from '../../containers';
 import { IntegrationsListItem } from './IntegrationsListItem';
 
 export interface IIntegrationsListProps {
@@ -107,10 +107,7 @@ export class IntegrationsList extends React.Component<IIntegrationsListProps, II
             </DropdownButton>
           </Toolbar.RightContent>
           <Toolbar.Results>
-            {this.props.loading
-              ? <div className="spinner" />
-              : <h5>{this.props.integrations.length} Results</h5>
-            }
+            <h5>{this.props.integrations.length} Results</h5>
             {/*{activeFilters &&
             activeFilters.length > 0 && (
               <Filter.ActiveLabel>Active Filters:</Filter.ActiveLabel>
@@ -137,12 +134,21 @@ export class IntegrationsList extends React.Component<IIntegrationsListProps, II
 
         <div className="container-fluid">
           <ListView>
-            {this.props.integrations.map((integration, index) => (
-              <IntegrationsListItem
-                integration={integration}
-                key={index}
-                onSaveIntegration={this.props.onSaveIntegration}
-              />
+            {this.props.integrations.map((integration: ICustomResource, index) => (
+              <WithPods
+                integrationName={integration.metadata.name}
+                namespace={integration.metadata.namespace}
+                key={integration.metadata.uid}
+              >
+                {(asyncPods) =>(
+                  <IntegrationsListItem
+                    integration={integration}
+                    pods={asyncPods.data ? asyncPods.data.items : []}
+                    key={index}
+                    onSaveIntegration={this.props.onSaveIntegration}
+                  />
+                )}
+              </WithPods>
             ))}
           </ListView>
 

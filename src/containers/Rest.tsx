@@ -92,17 +92,20 @@ export class Rest extends React.Component<IRestProps, IRestState> {
 
   public read = async () => {
     try {
-      const result = await callFetch({
+      const response = await callFetch({
         contentType: this.props.contentType,
         headers: this.props.headers,
         method: 'GET',
         url: `${this.props.baseUrl}${this.props.url}`,
       });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
       let data;
       if (!this.props.contentType || this.props.contentType.indexOf('application/json') === 0) {
-        data = await result.json();
+        data = await response.json();
       } else {
-        data = await result.text();
+        data = await response.text();
       }
       this.setState({
         data,
@@ -122,14 +125,17 @@ export class Rest extends React.Component<IRestProps, IRestState> {
       loading: true
     })
     try {
-      await callFetch({
+      const response = await callFetch({
         body: data,
         contentType: this.props.contentType,
         headers: this.props.headers,
         method: 'PUT',
         url: `${this.props.baseUrl}${url}`,
       });
-      await this.read();
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      setTimeout(() => this.read(), 1000); // TODO: figure out why this is needed
     } catch(e) {
       this.setState({
         error: true,

@@ -2,7 +2,7 @@ import {
   Grid,
   ListView,
 } from 'patternfly-react';import * as React from 'react';
-import { ICustomResource, WithIntegrationLogs } from '../../containers';
+import { ICustomResource, IPod, WithPodLogs } from '../../containers';
 import { Editor, LogViewer } from '../../ui';
 
 export function specLanguageMapper(language: string) {
@@ -24,6 +24,7 @@ export function makeSaveFunction(
 
 export interface IIntegrationsListItemProps {
   integration: ICustomResource;
+  pods: IPod[];
   onSaveIntegration(url: string, integration: ICustomResource): void;
 }
 
@@ -48,8 +49,8 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
               expanded={this.state.expanded && this.state.expandedProp === 'source'}
               toggleExpanded={this.toggleExpanded.bind(null, 'source')}
             >
-              <span className="pficon pficon-blueprint" />
-              {this.props.integration.spec.source.language}
+              <strong>{this.props.integration.spec.source.language}</strong>
+              <span>Language</span>
             </ListView.Expand>
           </ListView.InfoItem>,
           <ListView.InfoItem key={2}>
@@ -58,7 +59,8 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
               toggleExpanded={this.toggleExpanded.bind(null, 'logs')}
             >
               <span className="pficon pficon-info" />
-              Logs
+              <strong>{this.props.pods.length}</strong>
+              Pod{this.props.pods.length > 1 ? 's' : ''}
             </ListView.Expand>
           </ListView.InfoItem>,
         ]}
@@ -83,21 +85,29 @@ export class IntegrationsListItem extends React.Component<IIntegrationsListItemP
           </Grid.Row>
         )}
         {this.state.expandedProp === 'logs' && (
-          <WithIntegrationLogs
-            namespace={this.props.integration.metadata.namespace}
-            integrationName={this.props.integration.metadata.name}
-          >
-            {({logs, pod}) =>
-              <React.Fragment>
-                <h2>Pod: {pod && pod.metadata.name} ({pod && pod.status.phase})</h2>
-                <LogViewer data={logs || []} />
-              </React.Fragment>
-            }
-          </WithIntegrationLogs>
+          this.props.pods.filter(pod => pod.status.phase === 'Running').map(pod => (
+            <WithPodLogs
+              key={pod.metadata.uid}
+              namespace={this.props.integration.metadata.namespace}
+              podName={pod.metadata.name}
+            >
+              {({data}) =>
+                <React.Fragment>
+                  <h2>Pod: {pod.metadata.name} ({pod.status.phase})</h2>
+                  <LogViewer data={data || []} />
+                </React.Fragment>
+              }
+            </WithPodLogs>
+          ))
+
         )}
       </ListView.Item>
     )
   }
+
+  public pushLogs = (pod: IPod, data: string[]) => {
+    return null;
+  };
 
   public toggleExpanded = (expandedProp: string) => {
     const expanded =
